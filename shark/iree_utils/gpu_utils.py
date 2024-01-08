@@ -104,7 +104,8 @@ def get_rocm_device_arch(device_num=0, extra_args=[]):
         print(f"Found ROCm device arch : {arch_in_device_dump}")
         return arch_in_device_dump
 
-    default_rocm_arch = "gfx1100"
+    # default_rocm_arch = "gfx1100"
+    default_rocm_arch = "gfx90a"
     print(
         "Did not find ROCm architecture from `--iree-rocm-target-chip` flag"
         "\n or from `iree-run-module --dump_devices=rocm` command."
@@ -122,6 +123,10 @@ def get_iree_rocm_args(device_num=0, extra_args=[]):
         rocm_arch = get_rocm_device_arch(device_num, extra_args)
         rocm_flags.append(f"--iree-rocm-target-chip={rocm_arch}")
 
+    rocm_flags.append("--iree-codegen-transform-dialect-library=/home/jinchen/toolbox/wmma_mfma/matmul_spec_mfma.mlir")
+    rocm_flags.append("--iree-codegen-use-transform-dialect-configuration=transform_codegen")
+    rocm_flags.append("--iree-codegen-llvmgpu-enable-transform-dialect-jit=false")
+    # rocm_flags.append("--iree-rocm-index-bits=32")
     return rocm_flags
 
 
